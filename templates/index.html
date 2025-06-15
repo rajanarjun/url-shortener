@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>URL Shortener</title>
+</head>
+
+<body>
+    <h1 align="center" style="font-size: 30px;">URL Shortener.</h1>
+    <form method="post" action="/shorturl">
+        <input 
+            type="url"
+            name="long_url"
+            value="{{ input_value or '' }}"
+            placeholder="Enter URL."
+            required />
+
+        <button type="submit";>shorten</button>
+
+        {% if error %}
+          <p style="color: red;">{{ error }}</p>
+        {% endif %}
+
+    </form>
+</body>
+</html>
