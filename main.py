@@ -1,7 +1,6 @@
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
 from pydantic import AnyHttpUrl, BaseModel, ValidationError, \
         field_validator
 from datetime import datetime
@@ -53,13 +52,28 @@ def short_url(request: Request, long_url: str = Form(...)):
             })
         
     curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    short_url = "https://short.ly/abc123"
+
+    # TODO: implement following
+    # db call
+    # base62 encoding
+
+    short_url = " "
     return templates.TemplateResponse("result.html",{
         "request": request,
         "original": valid_url,
         "short": short_url
         })
 
+
+@app.get("/{short_id}")
+def redirect_to_long(short_id: str):
+    long_url = ""
+    # TODO: implement this db lookup
+    # long_url = db_lookup(short_id)
+    if long_url:
+        return RedirectResponse(long_url)
+    else:
+        raise HTTPException(status_code=404)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
