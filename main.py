@@ -3,8 +3,8 @@ from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import AnyHttpUrl, BaseModel, ValidationError, \
         field_validator
-from datetime import datetime
 import uvicorn
+import db
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -51,10 +51,9 @@ def short_url(request: Request, long_url: str = Form(...)):
             "error": "Invalid URL. Please enter a valid URL."
             })
         
-    curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    db_id = db.insert_db(long_url)
+    print(db_id)
 
-    # TODO: implement following
-    # db call
     # base62 encoding
 
     short_url = " "
@@ -76,4 +75,6 @@ def redirect_to_long(short_id: str):
         raise HTTPException(status_code=404)
 
 if __name__ == "__main__":
+    db.initialize_db()
     uvicorn.run(app, host="127.0.0.1", port=8000)
+    db.close_db()
