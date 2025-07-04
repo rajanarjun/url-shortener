@@ -5,6 +5,7 @@ from pydantic import AnyHttpUrl, BaseModel, ValidationError, \
         field_validator
 import uvicorn
 import db
+import base62
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -55,8 +56,10 @@ def short_url(request: Request, long_url: str = Form(...)):
     print(db_id)
 
     # base62 encoding
+    encoded_string = base62.encode(db_id)
 
-    short_url = " "
+    short_url = f"surl/{encoded_string}"
+
     return templates.TemplateResponse("result.html",{
         "request": request,
         "original": valid_url,
@@ -67,8 +70,11 @@ def short_url(request: Request, long_url: str = Form(...)):
 @app.get("/{short_id}")
 def redirect_to_long(short_id: str):
     long_url = ""
+
     # TODO: implement this db lookup
-    # long_url = db_lookup(short_id)
+    # short id base62 decoding
+    # long_url = db.redirect_lookup(short_id)
+
     if long_url:
         return RedirectResponse(long_url)
     else:
