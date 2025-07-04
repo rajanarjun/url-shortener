@@ -53,12 +53,10 @@ def short_url(request: Request, long_url: str = Form(...)):
             })
         
     db_id = db.insert_db(long_url)
-    print(db_id)
 
     # base62 encoding
     encoded_string = base62.encode(db_id)
-
-    short_url = f"surl/{encoded_string}"
+    short_url = f"https://localhost/{encoded_string}"
 
     return templates.TemplateResponse("result.html",{
         "request": request,
