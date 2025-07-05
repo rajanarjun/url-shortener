@@ -19,8 +19,6 @@ def initialize_db():
     )
     """)
 
-    # TODO: once short_url generated add this column to the table
-    # short_url VARCHAR(10) UNIQUE NOT NULL,
     conn.commit()
     cur.close()
 
@@ -37,6 +35,15 @@ def insert_db(long_url):
     cur.close()
     return insert_id
 
+def redirect_lookup(serial_id):
+    global conn
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT long_url FROM urls WHERE id = %s;
+        """ , (serial_id,))
+    
+    long_url = cur.fetchone()[0]
+    return long_url
 
 def close_db():
     conn.close()

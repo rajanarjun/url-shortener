@@ -56,7 +56,7 @@ def short_url(request: Request, long_url: str = Form(...)):
 
     # base62 encoding
     encoded_string = base62.encode(db_id)
-    short_url = f"https://localhost/{encoded_string}"
+    short_url = f"http://127.0.0.1:8000/su/{encoded_string}"
 
     return templates.TemplateResponse("result.html",{
         "request": request,
@@ -65,13 +65,12 @@ def short_url(request: Request, long_url: str = Form(...)):
         })
 
 
-@app.get("/{short_id}")
+@app.get("/su/{short_id}")
 def redirect_to_long(short_id: str):
-    long_url = ""
 
-    # TODO: implement this db lookup
-    # short id base62 decoding
-    # long_url = db.redirect_lookup(short_id)
+    # base62 decoding
+    serial_id = base62.decode(short_id)
+    long_url = db.redirect_lookup(serial_id)
 
     if long_url:
         return RedirectResponse(long_url)
