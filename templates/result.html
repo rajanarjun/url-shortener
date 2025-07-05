@@ -5,9 +5,9 @@
 </head>
 
 <body>
-    <h1 align="center"> Here is your shortened URL:</h1>
+    <h3 align="center"> Here is your shortened URL:</h3>
     <p>Original: {{ original }}</p>
-    <p>Short: {{ short }}</p>
+    <p>Short: <a href="{{ short }}">{{ short }}</a></p>
     <form method="get" action="/">
         <button type="submit">Try another.</button>
     </form>
