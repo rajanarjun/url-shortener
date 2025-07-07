@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>URL Shortener</title>
-</head>
+    <head>
+        <title>URL Shortener</title>
+    </head>
 
-<body>
-  <h2 align="center">URL Shortener.</h2>
-  <form method="post" action="/shorturl">
-    <input type="url"
-           name="long_url"
-           value="{{ input_value or '' }}"
-           placeholder="Enter URL."
-           required />
+    <body>
+        <h2 align="center">URL Shortener.</h2>
+        <form method="post" action="/shorturl">
+            <input type="url"
+                   name="long_url"
+                   value="{{ input_value or '' }}"
+                   placeholder="Enter URL."
+                   required />
 
-    <button type="submit";>shorten</button>
-    {% if error %}
-    <p style="color: red;">{{ error }}</p>
-    {% endif %}
+            <button type="submit";>shorten</button>
+            {% if error %}
+            <p style="color: red;">{{ error }}</p>
+            {% endif %}
 
-  </form>
-</body>
+        </form>
+    </body>
 </html>
