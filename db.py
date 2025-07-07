@@ -2,13 +2,13 @@ import psycopg2
 
 conn = None
 
-def initialize_db():
+def initialize_db(db_name, db_host, db_user, db_pasw, db_port):
   global conn
-  conn = psycopg2.connect(dbname="postgres",
-                          host="localhost",
-                          user="postgres",
-                          password="123456789",
-                          port=5432)
+  conn = psycopg2.connect(dbname=db_name,
+                          host=db_host,
+                          user=db_user,
+                          password=db_pasw,
+                          port=db_port)
 
   cur = conn.cursor()
   cur.execute("""
@@ -35,6 +35,7 @@ def insert_db(long_url):
   cur.close()
   return insert_id
 
+
 def redirect_lookup(serial_id):
   global conn
   cur = conn.cursor()
@@ -44,6 +45,7 @@ def redirect_lookup(serial_id):
 
   long_url = cur.fetchone()[0]
   return long_url
+
 
 def close_db():
   conn.close()

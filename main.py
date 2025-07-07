@@ -6,9 +6,27 @@ from pydantic import AnyHttpUrl, BaseModel, ValidationError, \
 import uvicorn
 import db
 import base62
+from config import settings
+
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+
+
+@app.on_event("startup")
+def startup():
+  db.initialize_db(
+     db_name=settings.DB_NAME,
+     db_host=settings.DB_HOST,
+     db_user=settings.DB_USER,
+     db_pasw=settings.DB_PASW,
+     db_port=settings.DB_PORT
+     )
+
+
+@app.on_event("shutdown")
+def shutdown():
+  db.close_db()
 
 class URLModel(BaseModel):
   url: AnyHttpUrl
@@ -77,7 +95,3 @@ def redirect_to_long(short_id: str):
   else:
     raise HTTPException(status_code=404)
 
-if __name__ == "__main__":
-  db.initialize_db()
-  uvicorn.run(app, host="127.0.0.1", port=8000)
-  db.close_db()
