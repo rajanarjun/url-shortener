@@ -1,32 +1,29 @@
 from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+from contextlib import asynccontextmanager
 from pydantic import AnyHttpUrl, BaseModel, ValidationError, \
     field_validator
-import uvicorn
 import db
 import base62
 from config import settings
 
 
-app = FastAPI()
-templates = Jinja2Templates(directory="templates")
-
-
-@app.on_event("startup")
-def startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
   db.initialize_db(
-     db_name=settings.DB_NAME,
-     db_host=settings.DB_HOST,
-     db_user=settings.DB_USER,
-     db_pasw=settings.DB_PASW,
-     db_port=settings.DB_PORT
+    db_name=settings.DB_NAME,
+    db_host=settings.DB_HOST,
+    db_user=settings.DB_USER,
+    db_pasw=settings.DB_PASW,
+    db_port=settings.DB_PORT
   )
-
-
-@app.on_event("shutdown")
-def shutdown():
+  yield
   db.close_db()
+
+
+app = FastAPI(lifespan=lifespan)
+templates = Jinja2Templates(directory="templates")
 
 
 class URLModel(BaseModel):
@@ -85,7 +82,6 @@ def short_url(request: Request, long_url: str = Form(...)):
 
 @app.get("/su/{short_id}")
 def redirect_to_long(short_id: str):
-
   # base62 decoding
   serial_id = base62.decode(short_id)
   long_url = db.redirect_lookup(serial_id)
