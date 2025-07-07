@@ -21,12 +21,13 @@ def startup():
      db_user=settings.DB_USER,
      db_pasw=settings.DB_PASW,
      db_port=settings.DB_PORT
-     )
+  )
 
 
 @app.on_event("shutdown")
 def shutdown():
   db.close_db()
+
 
 class URLModel(BaseModel):
   url: AnyHttpUrl
@@ -71,10 +72,9 @@ def short_url(request: Request, long_url: str = Form(...)):
       })
 
   db_id = db.insert_db(long_url)
-
   # base62 encoding
   encoded_string = base62.encode(db_id)
-  short_url = f"http://127.0.0.1:8000/su/{encoded_string}"
+  short_url = f"{settings.BASE_URL}/su/{encoded_string}"
 
   return templates.TemplateResponse("result.html",{
     "request": request,
