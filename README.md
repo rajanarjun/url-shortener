@@ -8,7 +8,7 @@ A simple URL shortener web application that takes a long URL and generates a sho
 - Simple web interface built with HTML templates
 - Lightweight and easy to deploy
 
-## Project Progress
+## Progress
 - **Switching to Flask** — Refactoring the existing FastAPI implementation to Flask.
 - **Improved Encoding** — More standardized and reliable short-link generation method, possibly using UUIDs or hash-based encoding.
 - **Multiple Client Support** — Support for multiple users or clients, user-specific short URLs.
