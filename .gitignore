@@ -1,6 +1,5 @@
-.venv/
+venv/
+venv_flask/
 __pycache__/
 .swp
-todo.txt
 .env
-tags
